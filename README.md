@@ -1,4 +1,4 @@
-# Thesis Template
+# Thesis
 
 My master's thesis is a new approach for testing microservices in a formal way.
 
