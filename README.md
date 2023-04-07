@@ -1,5 +1,5 @@
-# Thesis Template
+# Thesis
 
-A LaTeX template for typesetting theses in Persian.
+My master's thesis is a new approach for testing microservices in a formal way.
 
-By: Hamid Zarrabi-Zadeh
+By: Sajjad Vahedi
