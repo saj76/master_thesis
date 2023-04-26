@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specificationSet xmlns="http://www.yawlfoundation.org/yawlschema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0" xsi:schemaLocation="http://www.yawlfoundation.org/yawlschema http://www.yawlfoundation.org/yawlschema/YAWL_Schema4.0.xsd">
+  <specification uri="running_example_flow">
+    <documentation>No description provided</documentation>
+    <metaData>
+      <creator>Sajjad-PC</creator>
+      <description>No description provided</description>
+      <coverage>4.5.1</coverage>
+      <version>0.11</version>
+      <persistent>false</persistent>
+      <identifier>UID_49d93396-74de-4347-9198-dc22ba0d33d7</identifier>
+    </metaData>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" />
+    <decomposition id="Net" isRootNet="true" xsi:type="NetFactsType">
+      <localVariable>
+        <index>0</index>
+        <name>check_credit_card_ok</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>1</index>
+        <name>check_item_ok</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <processControlElements>
+        <inputCondition id="InputCondition">
+          <flowsInto>
+            <nextElementRef id="start_payment" />
+          </flowsInto>
+        </inputCondition>
+        <task id="start_payment">
+          <name>start_payment</name>
+          <flowsInto>
+            <nextElementRef id="check_credit_card" />
+            <predicate>((b &gt; 3) and (b  &lt; 1))</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="check_item_info" />
+            <predicate>true()</predicate>
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="or" />
+          <split code="or" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="check_credit_card">
+          <name>check_credit_card</name>
+          <flowsInto>
+            <nextElementRef id="payment_end" />
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="charge_credit_card" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="check_item_info">
+          <name>check_item_info</name>
+          <flowsInto>
+            <nextElementRef id="charge_credit_card" />
+            <predicate ordering="0">true()</predicate>
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="payment_end" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="xor" />
+          <split code="xor" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="charge_credit_card">
+          <name>charge_credit_card</name>
+          <flowsInto>
+            <nextElementRef id="payment_end" />
+          </flowsInto>
+          <join code="and" />
+          <split code="and" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="payment_end">
+          <name>payment_end</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+            <predicate>true()</predicate>
+            <isDefaultFlow />
+          </flowsInto>
+          <flowsInto>
+            <nextElementRef id="start_payment" />
+            <predicate>true()</predicate>
+          </flowsInto>
+          <join code="or" />
+          <split code="or" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <outputCondition id="OutputCondition" />
+      </processControlElements>
+    </decomposition>
+  </specification>
+  <layout>
+    <locale language="en" country="US"/>
+    <specification id="running_example_flow" defaultBgColor="-526351">
+      <size w="58" h="28"/>
+      <net id="Net" bgColor="-526351">
+        <bounds x="0" y="0" w="1300" h="674"/>
+        <frame x="0" y="0" w="1303" h="677"/>
+        <viewport x="0" y="0" w="1303" h="677"/>
+        <vertex id="OutputCondition">
+          <attributes>
+            <bounds x="1,228" y="328" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <vertex id="InputCondition">
+          <attributes>
+            <bounds x="36" y="328" w="32" h="32"/>
+          </attributes>
+        </vertex>
+        <container id="check_credit_card">
+          <vertex>
+            <attributes>
+              <bounds x="308" y="220" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="273" y="252" w="111" h="20"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="339" y="220" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="payment_end">
+          <vertex>
+            <attributes>
+              <bounds x="820" y="328" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="788" y="360" w="97" h="21"/>
+            </attributes>
+          </label>
+          <decorator type="OR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="851" y="328" w="11" h="32"/>
+            </attributes>
+          </decorator>
+          <decorator type="OR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="810" y="328" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="check_item_info">
+          <vertex>
+            <attributes>
+              <bounds x="308" y="432" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="279" y="464" w="99" h="20"/>
+            </attributes>
+          </label>
+          <decorator type="XOR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="339" y="432" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="start_payment">
+          <vertex>
+            <attributes>
+              <bounds x="180" y="328" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="148" y="360" w="96" h="20"/>
+            </attributes>
+          </label>
+          <decorator type="OR_split">
+            <position>13</position>
+            <attributes>
+              <bounds x="211" y="328" w="11" h="32"/>
+            </attributes>
+          </decorator>
+          <decorator type="OR_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="170" y="328" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <container id="charge_credit_card">
+          <vertex>
+            <attributes>
+              <bounds x="604" y="144" w="32" h="32"/>
+              <backgroundColor>-4144960</backgroundColor>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="560" y="176" w="117" h="21"/>
+            </attributes>
+          </label>
+          <decorator type="AND_join">
+            <position>12</position>
+            <attributes>
+              <bounds x="594" y="144" w="11" h="32"/>
+            </attributes>
+          </decorator>
+        </container>
+        <flow source="start_payment" target="check_credit_card">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="check_credit_card" target="charge_credit_card">
+          <ports in="2" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="InputCondition" target="start_payment">
+          <ports in="13" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="check_credit_card" target="payment_end">
+          <ports in="2" out="0"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="check_item_info" target="charge_credit_card">
+          <ports in="2" out="2"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="payment_end" target="OutputCondition">
+          <ports in="0" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="check_item_info" target="payment_end">
+          <ports in="3" out="0"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="charge_credit_card" target="payment_end">
+          <ports in="13" out="0"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="start_payment" target="check_item_info">
+          <ports in="2" out="12"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+          </attributes>
+        </flow>
+        <flow source="payment_end" target="start_payment">
+          <ports in="2" out="4"/>
+          <attributes>
+            <lineStyle>12</lineStyle>
+            <points>
+              <value x="856" y="328"/>
+              <value x="528" y="80"/>
+              <value x="175" y="328"/>
+            </points>
+          </attributes>
+        </flow>
+      </net>
+    </specification>
+  </layout>
+</specificationSet>
