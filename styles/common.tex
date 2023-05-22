@@ -7,15 +7,16 @@
 \usepackage{amssymb,amsmath}
 \usepackage[colorlinks,linkcolor=blue,citecolor=blue]{hyperref}
 \usepackage[usenames,dvipsnames]{pstricks}
+\let\clipbox\relax
 \usepackage{graphicx,subfigure,wrapfig}
 \usepackage{geometry}
 \usepackage[mathscr]{euscript}
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage[figureposition=bottom,tableposition=top,font={small,bf},labelfont=bf]{caption}
-
 \usepackage{algorithmicx,algorithm}
-
+\usepackage{array}
+\usepackage{booktabs}
 \usepackage[localise=on,extrafootnotefeatures]{xepersian}
 \usepackage[noend]{algpseudocode}
 \input{styles/alg-fa}
@@ -161,6 +162,7 @@ Path=styles/fonts/
 
 % ------------------------------ Images and Figures --------------------------
 
+\usepackage[export]{adjustbox}
 \graphicspath{{figs/}}
 \setlength{\intextsep}{0pt}  % for float boxes
 \renewcommand{\psscalebox}[1]{}  % for LaTeX Draw
