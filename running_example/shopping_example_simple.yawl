@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <specificationSet xmlns="http://www.yawlfoundation.org/yawlschema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0" xsi:schemaLocation="http://www.yawlfoundation.org/yawlschema http://www.yawlfoundation.org/yawlschema/YAWL_Schema4.0.xsd">
-  <specification uri="shopping_example">
+  <specification uri="shopping_example_simple">
     <documentation>No description provided</documentation>
     <metaData>
       <creator>Sajjad-PC</creator>
       <description>No description provided</description>
       <coverage>4.5.1</coverage>
-      <version>0.28</version>
+      <version>0.11</version>
       <persistent>false</persistent>
-      <identifier>UID_f86d1eeb-4fe1-40ab-938e-bfb26080b144</identifier>
+      <identifier>UID_5ffc35a1-4b2e-49be-8adb-6b38b1e24382</identifier>
     </metaData>
     <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" />
     <decomposition id="Net" isRootNet="true" xsi:type="NetFactsType">
       <localVariable>
         <index>0</index>
-        <name>need_security_checking</name>
+        <name>login_by_twitter</name>
         <type>int</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
         <initialValue>0</initialValue>
       </localVariable>
       <localVariable>
         <index>1</index>
-        <name>login_by_twitter</name>
+        <name>pay_by_credit_card</name>
         <type>int</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
         <initialValue>0</initialValue>
@@ -31,46 +31,46 @@
         <name>login_by_google</name>
         <type>int</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
-        <initialValue>1</initialValue>
+        <initialValue>0</initialValue>
       </localVariable>
       <localVariable>
         <index>3</index>
-        <name>login_by_linkedin</name>
+        <name>need_security_checking</name>
         <type>int</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
         <initialValue>0</initialValue>
       </localVariable>
       <localVariable>
         <index>4</index>
-        <name>login_successful</name>
-        <type>int</type>
-        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
-        <initialValue>0</initialValue>
-      </localVariable>
-      <localVariable>
-        <index>5</index>
         <name>security_check_pass</name>
         <type>int</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
         <initialValue>0</initialValue>
       </localVariable>
       <localVariable>
-        <index>6</index>
-        <name>pay_by_paypal</name>
+        <index>5</index>
+        <name>payment_successful</name>
         <type>int</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
-        <initialValue>1</initialValue>
+        <initialValue>0</initialValue>
+      </localVariable>
+      <localVariable>
+        <index>6</index>
+        <name>login_by_linkedin</name>
+        <type>int</type>
+        <namespace>http://www.w3.org/2001/XMLSchema</namespace>
+        <initialValue>0</initialValue>
       </localVariable>
       <localVariable>
         <index>7</index>
-        <name>pay_by_credit_card</name>
+        <name>login_successful</name>
         <type>int</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
         <initialValue>0</initialValue>
       </localVariable>
       <localVariable>
         <index>8</index>
-        <name>payment_successful</name>
+        <name>pay_by_paypal</name>
         <type>int</type>
         <namespace>http://www.w3.org/2001/XMLSchema</namespace>
         <initialValue>0</initialValue>
@@ -84,32 +84,10 @@
         <task id="start_shopping">
           <name>start_shopping</name>
           <flowsInto>
-            <nextElementRef id="security_checker" />
-            <predicate ordering="1">need_security_checking = 1</predicate>
-          </flowsInto>
-          <flowsInto>
             <nextElementRef id="start_login" />
             <isDefaultFlow />
           </flowsInto>
-          <join code="xor" />
-          <split code="xor" />
-          <resourcing>
-            <offer initiator="user" />
-            <allocate initiator="user" />
-            <start initiator="user" />
-          </resourcing>
-        </task>
-        <task id="security_checker">
-          <name>security_checker</name>
-          <flowsInto>
-            <nextElementRef id="finsh_shopping" />
-            <isDefaultFlow />
-          </flowsInto>
-          <flowsInto>
-            <nextElementRef id="start_login" />
-            <predicate ordering="0">security_check_pass = 1</predicate>
-          </flowsInto>
-          <join code="xor" />
+          <join code="and" />
           <split code="xor" />
           <resourcing>
             <offer initiator="user" />
@@ -121,7 +99,7 @@
           <name>start_login</name>
           <flowsInto>
             <nextElementRef id="login_by_google" />
-            <isDefaultFlow />
+            <predicate ordering="0">(((login_by_linkedin = 0) and (login_by_twitter = 0)) and (login_by_google = 1))</predicate>
           </flowsInto>
           <flowsInto>
             <nextElementRef id="login_by_twitter" />
@@ -129,23 +107,9 @@
           </flowsInto>
           <flowsInto>
             <nextElementRef id="login_by_linkedin" />
-            <predicate ordering="0">(((login_by_linkedin = 1) and (login_by_twitter = 0)) and (login_by_google = 0))</predicate>
-          </flowsInto>
-          <join code="xor" />
-          <split code="xor" />
-          <resourcing>
-            <offer initiator="user" />
-            <allocate initiator="user" />
-            <start initiator="user" />
-          </resourcing>
-        </task>
-        <task id="finsh_shopping">
-          <name>finsh_shopping</name>
-          <flowsInto>
-            <nextElementRef id="OutputCondition" />
             <isDefaultFlow />
           </flowsInto>
-          <join code="xor" />
+          <join code="and" />
           <split code="xor" />
           <resourcing>
             <offer initiator="user" />
@@ -198,12 +162,8 @@
         <task id="logging_in">
           <name>logging_in</name>
           <flowsInto>
-            <nextElementRef id="start_shopping" />
-            <isDefaultFlow />
-          </flowsInto>
-          <flowsInto>
             <nextElementRef id="item_picker" />
-            <predicate ordering="0">login_successful = 1</predicate>
+            <isDefaultFlow />
           </flowsInto>
           <join code="xor" />
           <split code="xor" />
@@ -236,7 +196,7 @@
             <nextElementRef id="pay_by_paypal" />
             <predicate ordering="0">((pay_by_paypal = 1) and (pay_by_credit_card = 0))</predicate>
           </flowsInto>
-          <join code="xor" />
+          <join code="and" />
           <split code="xor" />
           <resourcing>
             <offer initiator="user" />
@@ -276,13 +236,23 @@
           <name>payment_confirmer</name>
           <flowsInto>
             <nextElementRef id="finsh_shopping" />
-            <predicate ordering="0">payment_successful = 1</predicate>
-          </flowsInto>
-          <flowsInto>
-            <nextElementRef id="start_payment" />
             <isDefaultFlow />
           </flowsInto>
           <join code="xor" />
+          <split code="xor" />
+          <resourcing>
+            <offer initiator="user" />
+            <allocate initiator="user" />
+            <start initiator="user" />
+          </resourcing>
+        </task>
+        <task id="finsh_shopping">
+          <name>finsh_shopping</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+            <isDefaultFlow />
+          </flowsInto>
+          <join code="and" />
           <split code="xor" />
           <resourcing>
             <offer initiator="user" />
@@ -296,20 +266,20 @@
   </specification>
   <layout>
     <locale language="en" country="US"/>
-    <specification id="shopping_example" defaultBgColor="-526351">
+    <specification id="shopping_example_simple" defaultBgColor="-526351">
       <size w="58" h="28"/>
       <net id="Net" bgColor="-526351">
-        <bounds x="0" y="0" w="1300" h="674"/>
-        <frame x="0" y="0" w="1303" h="677"/>
-        <viewport x="0" y="0" w="1303" h="677"/>
+        <bounds x="0" y="0" w="1300" h="532"/>
+        <frame x="0" y="0" w="1303" h="535"/>
+        <viewport x="0" y="0" w="1303" h="535"/>
         <vertex id="OutputCondition">
           <attributes>
-            <bounds x="1,228" y="324" w="32" h="32"/>
+            <bounds x="1,228" y="328" w="32" h="32"/>
           </attributes>
         </vertex>
         <vertex id="InputCondition">
           <attributes>
-            <bounds x="36" y="324" w="32" h="32"/>
+            <bounds x="36" y="328" w="32" h="32"/>
           </attributes>
         </vertex>
         <container id="start_login">
@@ -320,19 +290,13 @@
           </vertex>
           <label>
             <attributes>
-              <bounds x="300" y="354" w="96" h="20"/>
+              <bounds x="304" y="356" w="96" h="20"/>
             </attributes>
           </label>
           <decorator type="XOR_split">
             <position>13</position>
             <attributes>
               <bounds x="363" y="322" w="11" h="33"/>
-            </attributes>
-          </decorator>
-          <decorator type="XOR_join">
-            <position>12</position>
-            <attributes>
-              <bounds x="322" y="322" w="11" h="33"/>
             </attributes>
           </decorator>
         </container>
@@ -344,21 +308,27 @@
           </vertex>
           <label>
             <attributes>
-              <bounds x="963" y="356" w="116" h="20"/>
+              <bounds x="958" y="356" w="116" h="20"/>
             </attributes>
           </label>
-          <decorator type="XOR_split">
-            <position>13</position>
-            <attributes>
-              <bounds x="1,035" y="324" w="11" h="33"/>
-            </attributes>
-          </decorator>
           <decorator type="XOR_join">
             <position>12</position>
             <attributes>
               <bounds x="994" y="324" w="11" h="33"/>
             </attributes>
           </decorator>
+        </container>
+        <container id="pay_by_credit_card">
+          <vertex>
+            <attributes>
+              <bounds x="884" y="404" w="32" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="840" y="436" w="121" h="21"/>
+            </attributes>
+          </label>
         </container>
         <container id="login_by_twitter">
           <vertex>
@@ -369,6 +339,18 @@
           <label>
             <attributes>
               <bounds x="400" y="356" w="97" h="21"/>
+            </attributes>
+          </label>
+        </container>
+        <container id="login_by_google">
+          <vertex>
+            <attributes>
+              <bounds x="431" y="260" w="33" h="32"/>
+            </attributes>
+          </vertex>
+          <label>
+            <attributes>
+              <bounds x="400" y="292" w="101" h="21"/>
             </attributes>
           </label>
         </container>
@@ -384,24 +366,6 @@
             </attributes>
           </label>
         </container>
-        <container id="security_checker">
-          <vertex>
-            <attributes>
-              <bounds x="224" y="480" w="32" h="32"/>
-            </attributes>
-          </vertex>
-          <label>
-            <attributes>
-              <bounds x="196" y="512" w="101" h="21"/>
-            </attributes>
-          </label>
-          <decorator type="XOR_split">
-            <position>13</position>
-            <attributes>
-              <bounds x="255" y="480" w="11" h="32"/>
-            </attributes>
-          </decorator>
-        </container>
         <container id="finsh_shopping">
           <vertex>
             <attributes>
@@ -410,15 +374,9 @@
           </vertex>
           <label>
             <attributes>
-              <bounds x="1,088" y="356" w="96" h="20"/>
+              <bounds x="1,092" y="356" w="96" h="20"/>
             </attributes>
           </label>
-          <decorator type="XOR_join">
-            <position>12</position>
-            <attributes>
-              <bounds x="1,114" y="324" w="11" h="33"/>
-            </attributes>
-          </decorator>
         </container>
         <container id="logging_in">
           <vertex>
@@ -428,15 +386,9 @@
           </vertex>
           <label>
             <attributes>
-              <bounds x="492" y="356" w="97" h="21"/>
+              <bounds x="488" y="356" w="96" h="20"/>
             </attributes>
           </label>
-          <decorator type="XOR_split">
-            <position>13</position>
-            <attributes>
-              <bounds x="555" y="323" w="11" h="33"/>
-            </attributes>
-          </decorator>
           <decorator type="XOR_join">
             <position>12</position>
             <attributes>
@@ -455,18 +407,6 @@
               <bounds x="92" y="360" w="96" h="20"/>
             </attributes>
           </label>
-          <decorator type="XOR_split">
-            <position>13</position>
-            <attributes>
-              <bounds x="155" y="325" w="11" h="33"/>
-            </attributes>
-          </decorator>
-          <decorator type="XOR_join">
-            <position>12</position>
-            <attributes>
-              <bounds x="114" y="325" w="11" h="33"/>
-            </attributes>
-          </decorator>
         </container>
         <container id="start_payment">
           <vertex>
@@ -476,19 +416,13 @@
           </vertex>
           <label>
             <attributes>
-              <bounds x="728" y="356" w="96" h="20"/>
+              <bounds x="732" y="356" w="96" h="20"/>
             </attributes>
           </label>
           <decorator type="XOR_split">
             <position>13</position>
             <attributes>
               <bounds x="791" y="324" w="11" h="33"/>
-            </attributes>
-          </decorator>
-          <decorator type="XOR_join">
-            <position>12</position>
-            <attributes>
-              <bounds x="750" y="324" w="11" h="33"/>
             </attributes>
           </decorator>
         </container>
@@ -504,30 +438,6 @@
             </attributes>
           </label>
         </container>
-        <container id="pay_by_credit_card">
-          <vertex>
-            <attributes>
-              <bounds x="884" y="404" w="32" h="32"/>
-            </attributes>
-          </vertex>
-          <label>
-            <attributes>
-              <bounds x="840" y="436" w="121" h="21"/>
-            </attributes>
-          </label>
-        </container>
-        <container id="login_by_google">
-          <vertex>
-            <attributes>
-              <bounds x="431" y="260" w="33" h="32"/>
-            </attributes>
-          </vertex>
-          <label>
-            <attributes>
-              <bounds x="400" y="292" w="101" h="21"/>
-            </attributes>
-          </label>
-        </container>
         <container id="pay_by_paypal">
           <vertex>
             <attributes>
@@ -540,23 +450,13 @@
             </attributes>
           </label>
         </container>
-        <flow source="security_checker" target="start_login">
-          <ports in="2" out="3"/>
-          <attributes>
-            <lineStyle>11</lineStyle>
-            <points>
-              <value x="245" y="463.5"/>
-              <value x="214" y="167.25"/>
-            </points>
-          </attributes>
-        </flow>
         <flow source="pay_by_paypal" target="payment_confirmer">
           <ports in="13" out="2"/>
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="929" y="255.5"/>
-              <value x="1,010" y="339.5"/>
+              <value x="911" y="259.5"/>
+              <value x="994" y="340"/>
             </points>
           </attributes>
         </flow>
@@ -565,18 +465,8 @@
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="460.25" y="338.25"/>
-              <value x="514" y="338.75"/>
-            </points>
-          </attributes>
-        </flow>
-        <flow source="login_by_google" target="logging_in">
-          <ports in="13" out="4"/>
-          <attributes>
-            <lineStyle>11</lineStyle>
-            <points>
-              <value x="462.25" y="275.5"/>
-              <value x="519" y="323.25"/>
+              <value x="461" y="338"/>
+              <value x="514" y="339"/>
             </points>
           </attributes>
         </flow>
@@ -585,8 +475,18 @@
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="460.25" y="411.5"/>
-              <value x="514" y="346.5"/>
+              <value x="461" y="411.5"/>
+              <value x="514" y="347"/>
+            </points>
+          </attributes>
+        </flow>
+        <flow source="login_by_google" target="logging_in">
+          <ports in="13" out="4"/>
+          <attributes>
+            <lineStyle>11</lineStyle>
+            <points>
+              <value x="463" y="275.5"/>
+              <value x="519" y="323"/>
             </points>
           </attributes>
         </flow>
@@ -595,8 +495,8 @@
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="373" y="349.125"/>
-              <value x="430" y="349.125"/>
+              <value x="373" y="338"/>
+              <value x="429" y="338"/>
             </points>
           </attributes>
         </flow>
@@ -605,29 +505,18 @@
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="937" y="423.5"/>
-              <value x="1,010" y="339.5"/>
+              <value x="915" y="419.5"/>
+              <value x="994" y="340"/>
             </points>
           </attributes>
         </flow>
         <flow source="payment_confirmer" target="finsh_shopping">
-          <ports in="2" out="2"/>
+          <ports in="13" out="12"/>
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="1,035" y="340.25"/>
-              <value x="1,114" y="340.25"/>
-            </points>
-          </attributes>
-        </flow>
-        <flow source="logging_in" target="start_shopping">
-          <ports in="0" out="4"/>
-          <attributes>
-            <lineStyle>12</lineStyle>
-            <points>
-              <value x="560" y="323.25"/>
-              <value x="360" y="204"/>
-              <value x="119" y="325.5"/>
+              <value x="1,045" y="340"/>
+              <value x="1,114" y="340"/>
             </points>
           </attributes>
         </flow>
@@ -636,49 +525,28 @@
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="817" y="339.5"/>
-              <value x="896" y="423.5"/>
+              <value x="801" y="340"/>
+              <value x="884" y="419.5"/>
             </points>
           </attributes>
         </flow>
         <flow source="start_shopping" target="start_login">
-          <ports in="2" out="2"/>
+          <ports in="13" out="12"/>
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="161" y="337"/>
-              <value x="338" y="329"/>
-            </points>
-          </attributes>
-        </flow>
-        <flow source="payment_confirmer" target="start_payment">
-          <ports in="0" out="4"/>
-          <attributes>
-            <lineStyle>12</lineStyle>
-            <points>
-              <value x="1,040" y="324"/>
-              <value x="904" y="192"/>
-              <value x="755" y="324"/>
+              <value x="165" y="341"/>
+              <value x="322" y="338"/>
             </points>
           </attributes>
         </flow>
         <flow source="item_picker" target="start_payment">
-          <ports in="13" out="2"/>
+          <ports in="13" out="12"/>
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="699" y="340.25"/>
-              <value x="760" y="340.25"/>
-            </points>
-          </attributes>
-        </flow>
-        <flow source="start_shopping" target="security_checker">
-          <ports in="3" out="12"/>
-          <attributes>
-            <lineStyle>11</lineStyle>
-            <points>
-              <value x="181" y="347.25"/>
-              <value x="388" y="451.5"/>
+              <value x="687" y="340"/>
+              <value x="750" y="340"/>
             </points>
           </attributes>
         </flow>
@@ -687,8 +555,8 @@
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="817" y="339.5"/>
-              <value x="888" y="255.5"/>
+              <value x="801" y="340"/>
+              <value x="880" y="259.5"/>
             </points>
           </attributes>
         </flow>
@@ -697,8 +565,8 @@
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="373" y="332.5"/>
-              <value x="430" y="275.5"/>
+              <value x="373" y="330"/>
+              <value x="431" y="275.5"/>
             </points>
           </attributes>
         </flow>
@@ -707,18 +575,18 @@
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="373" y="348"/>
-              <value x="430" y="415.5"/>
+              <value x="373" y="346"/>
+              <value x="429" y="411.5"/>
             </points>
           </attributes>
         </flow>
         <flow source="logging_in" target="item_picker">
-          <ports in="2" out="12"/>
+          <ports in="13" out="12"/>
           <attributes>
             <lineStyle>11</lineStyle>
             <points>
-              <value x="555" y="340.25"/>
-              <value x="658" y="340.25"/>
+              <value x="565" y="339"/>
+              <value x="646" y="340"/>
             </points>
           </attributes>
         </flow>
@@ -726,31 +594,12 @@
           <ports in="13" out="12"/>
           <attributes>
             <lineStyle>11</lineStyle>
-            <points>
-              <value x="1,171" y="333"/>
-              <value x="1,228" y="343.5"/>
-            </points>
           </attributes>
         </flow>
         <flow source="InputCondition" target="start_shopping">
-          <ports in="13" out="2"/>
+          <ports in="13" out="12"/>
           <attributes>
             <lineStyle>11</lineStyle>
-            <points>
-              <value x="67" y="346"/>
-              <value x="108" y="335.5"/>
-            </points>
-          </attributes>
-        </flow>
-        <flow source="security_checker" target="finsh_shopping">
-          <ports in="2" out="0"/>
-          <attributes>
-            <lineStyle>12</lineStyle>
-            <points>
-              <value x="325" y="535.5"/>
-              <value x="1,000" y="504"/>
-              <value x="1,119" y="355.75"/>
-            </points>
           </attributes>
         </flow>
       </net>
